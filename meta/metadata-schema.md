@@ -66,6 +66,9 @@ Rather than forcing every note into one artificial shape, note types define thei
 - **Playbooks**: `draft`, `active`, `deprecated`
 - **Experiments**: `planned`, `running`, `completed`, `failed`
 - **Captures**: `inbox`, `processed`, `discarded`
+- **Daily Notes**: `active`, `archived`
+- **Specifications**: `draft`, `active`, `evergreen`, `deprecated`
+- **Profiles**: `draft`, `active`
 
 ### Concept Confidence (`confidence`)
 - `raw`: Fleeting thought or early note; unverified.
