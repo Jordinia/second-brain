@@ -1,0 +1,24 @@
+# Obsidian workspace & caches
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.obsidian/cache/
+
+# AI agent backups & soft deletion
+.obsidian-mcp-backups/
+.trash/
+
+# Local environment & secrets
+.env
+.env.*
+!.env.example
+AGENTS.local.md
+meta/profile.md
+
+# Python virtual environments & build caches
+.venv/
+__pycache__/
+*.pyc
+
+# OS caches
+.DS_Store
+Thumbs.db
