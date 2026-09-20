@@ -29,5 +29,14 @@ jobs:
         run: |
           python scripts/validate_vault.py .
 
+      - name: Install Gitleaks
+        run: |
+          GITLEAKS_VERSION="8.24.3"
+          curl -sSL -o /tmp/gitleaks.tar.gz "https://github.com/zricethezav/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          tar -xzf /tmp/gitleaks.tar.gz -C /tmp gitleaks
+          chmod +x /tmp/gitleaks
+          sudo mv /tmp/gitleaks /usr/local/bin/
+
       - name: Gitleaks Secret Detection
-        uses: gitleaks/gitleaks-action@v3
+        run: |
+          gitleaks detect --source=. --verbose --redact
