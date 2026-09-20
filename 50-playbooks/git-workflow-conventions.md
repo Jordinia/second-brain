@@ -123,4 +123,5 @@ When automated agents (Hermes, Antigravity, Claude, Codex) interact with the vau
 - **No Force Pushes**: Force-pushing (`git push --force`) is strictly forbidden.
 - **Atomic Commits**: Agents must create targeted commits reflecting specific tasks.
 - **Diff Hygiene**: Before committing, agents must verify clean line endings and diffs (`git diff --check`).
+- **No Silent Conflict Resolution**: Agents must never silently overwrite or discard merge conflict markers without explicit human confirmation.
 - **No Secret Commits**: Agents must never stage or commit `.env`, private keys, or credential tokens.
