@@ -1,0 +1,33 @@
+name: Validate Vault Integrity & Secrets
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install Development Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Run Vault Schema & Link Validation
+        run: |
+          python scripts/validate_vault.py .
+
+      - name: Gitleaks Secret Detection
+        uses: gitleaks/gitleaks-action@v3
