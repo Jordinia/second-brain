@@ -9,7 +9,7 @@
 > [!WARNING] Keep Your Personal Second Brain Private
 > This repository (`Jordinia/second-brain`) is a **public open-source template**.
 > 
-> When creating your personal second brain, **do NOT clone this repository directly** if you intend to write personal journals, confidential projects, or life admin notes. If you clone it directly, you cannot push private notes back to this public repository.
+> When creating your personal second brain, **do NOT use a direct clone as your personal vault**. Create a repository from the template so your vault has its own remote, privacy settings, and independent history.
 > 
 > **The Proper Onboarding Flow**:
 > 1. Click the green **"Use this template"** button at the top of this GitHub repository $\rightarrow$ select **"Create a new repository"**.
@@ -29,9 +29,9 @@
    - Press `Ctrl + P` (or `Cmd + P` on macOS) $\rightarrow$ type `Daily notes: Open today's daily note` $\rightarrow$ press `Enter`.
    - Your daily log is created under `01-daily/YYYY-MM-DD.md` pre-populated with today's priorities, meals, and tasks.
 3. **Capture a Fleeting Thought**:
-   - Create a note in `00-inbox/quick-capture/` using the template at `templates/quick-capture.md`.
+   - Create a new note in `00-inbox/quick-capture/` $\rightarrow$ Press `Ctrl + P` (or `Cmd + P`) $\rightarrow$ type `Templates: Insert template` $\rightarrow$ select `quick-capture`.
 4. **Create Your First Concept Note**:
-   - Create a note in `30-knowledge/` using `templates/concept.md`. Link it from other notes using `[[concept-name]]`.
+   - Create a new note in `30-knowledge/` $\rightarrow$ Press `Ctrl + P` (or `Cmd + P`) $\rightarrow$ type `Templates: Insert template` $\rightarrow$ select `concept`. Link it from other notes using `[[concept-name]]`.
 5. **Sync Your Changes**:
    - In your terminal:
      ```bash
@@ -59,7 +59,7 @@ second-brain/
 ├── 90-archives/       # Inactive, completed, or deprecated notes retained for history
 ├── assets/            # Lightweight diagrams and attachments (<10MB)
 ├── templates/         # 11 Core-Obsidian compatible Markdown templates
-├── examples/          # 6 realistic sample notes demonstrating links and frontmatter
+├── examples/          # 7 realistic sample notes demonstrating links and frontmatter
 ├── meta/              # Metadata schema, prefix registry, and naming conventions
 ├── scripts/           # Standalone vault linter and schema validation tooling
 └── integrations/      # Documentation for GitSync, local LLMs, and AI agents

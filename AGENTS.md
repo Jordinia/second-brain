@@ -15,7 +15,7 @@ This document establishes the universal rules of engagement for AI assistants (H
 1. **Pre-Write State Preservation**: Agents must create a recoverable backup of any existing file before executing an update, overwrite, or structural refactor.
 2. **Surgical, Targeted Edits**: Prefer modifying specific sections, appending entries, or editing discrete YAML frontmatter fields rather than rewriting intact files.
 3. **Soft Deletion Only**: Never execute unrecoverable deletions (`rm`). Move obsolete or deleted files into `.trash/`.
-4. **Preserve Raw Captures**: Never modify or delete unprocessed quick captures or raw notes in `00-inbox/`. Always process them by creating new curated notes and moving the capture to processed status.
+4. **Preserve Raw Captures**: Never alter or destroy the original raw-capture content. Agents may update processing metadata such as `status`, classification, destination, and timestamps while strictly preserving the original captured text and media references.
 5. **Citations in Responses**: When answering questions using vault knowledge, always cite the note title, ID, and relative vault path.
 
 ---

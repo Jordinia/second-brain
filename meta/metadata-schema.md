@@ -21,10 +21,8 @@ Every note in the vault must contain at minimum:
 
 ```yaml
 ---
-id: <PREFIX>-<TIMESTAMP>
+id: <PREFIX>-<IDENTIFIER>
 type: <note-type>
-title: <human-readable title>
-date: YYYY-MM-DD
 tags:
   - <primary-tag>
 ---
@@ -32,26 +30,29 @@ tags:
 
 ---
 
-## 2. Type-Specific Prefix Registry
+## 2. Type-Specific Requirements & Prefix Registry
 
-To prevent ID collisions when multiple notes are generated in a single day, all notes follow this registry:
+Rather than forcing every note into one artificial shape, note types define their own semantic required fields while strictly conforming to the prefix registry:
 
-| Note Type | Prefix Pattern | Format | Example |
-| :--- | :--- | :--- | :--- |
-| **Daily Note** | `DAILY-` | `DAILY-{{date:YYYYMMDD}}` | `DAILY-20260920` |
-| **Quick Capture** | `CAP-` | `CAP-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `CAP-20260920-143022` |
-| **Project** | `PRJ-` | `PRJ-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `PRJ-20260920-143022` |
-| **Area** | `AREA-` | `AREA-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `AREA-20260920-143022` |
-| **Meeting** | `MTG-` | `MTG-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `MTG-20260920-143022` |
-| **Experiment** | `EXP-` | `EXP-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `EXP-20260920-143022` |
-| **Learning Note** | `LRN-` | `LRN-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `LRN-20260920-143022` |
-| **Literature Note** | `LIT-` | `LIT-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `LIT-20260920-143022` |
-| **Concept Note** | `KB-` | `KB-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `KB-20260920-143022` |
-| **Decision (ADR)** | `ADR-` | `ADR-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `ADR-20260920-143022` |
-| **Playbook (SOP)** | `PB-` | `PB-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `PB-20260920-143022` |
+| Note Type | Prefix | Format Pattern | Required Fields | Example ID |
+| :--- | :--- | :--- | :--- | :--- |
+| **`daily`** | `DAILY-` | `DAILY-{{date:YYYYMMDD}}` | `id`, `type`, `date`, `status`, `tags` | `DAILY-20260920` |
+| **`capture`** | `CAP-` | `CAP-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `status`, `created_at`, `tags` | `CAP-20260920-143022` |
+| **`project`** | `PRJ-` | `PRJ-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `tags` | `PRJ-20260920-143022` |
+| **`area`** | `AREA-` | `AREA-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `tags` | `AREA-20260920-143022` |
+| **`concept`** | `KB-` | `KB-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `tags` | `KB-20260920-143022` |
+| **`decision`** | `ADR-` | `ADR-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `date`, `tags` | `ADR-20260920-143022` |
+| **`experiment`** | `EXP-` | `EXP-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `date`, `tags` | `EXP-20260920-143022` |
+| **`learning-note`** | `LRN-` | `LRN-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `date`, `tags` | `LRN-20260920-143022` |
+| **`literature`** | `LIT-` | `LIT-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `year`, `reading_status`, `tags` | `LIT-20260920-143022` |
+| **`meeting`** | `MTG-` | `MTG-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `date`, `tags` | `MTG-20260920-143022` |
+| **`playbook`** | `PB-` | `PB-{{date:YYYYMMDD}}-{{time:HHmmss}}` | `id`, `type`, `title`, `status`, `date`, `tags` | `PB-20260920-143022` |
+| **`specification`**| `META-` | `META-<NAME>-<NNN>` | `id`, `type`, `title`, `status`, `tags` | `META-SCHEMA-001` |
+| **`profile`** | `META-` | `META-PROFILE-<SUFFIX>` | `id`, `type`, `title`, `tags` | `META-PROFILE-EXAMPLE` |
 
-> [!NOTE] Programmatic Agent Note Generation
-> Automated agents (Hermes, Antigravity, Codex) creating notes programmatically MUST verify uniqueness prior to writing, and may optionally utilize UUIDv4 or ULID strings in the ID suffix.
+> [!NOTE] Framework Documents & Programmatic Agent Note Generation
+> - **Framework Governance**: Governance specifications and profile definitions reside in the reserved `META-` prefix namespace.
+> - **Automated Agents**: Agents (Hermes, Antigravity, Codex) creating notes programmatically MUST verify ID uniqueness prior to writing, and may optionally utilize UUIDv4 or ULID strings in the ID suffix for collision resistance.
 
 ---
 

@@ -25,10 +25,10 @@ All modifications are tracked through Git. For regular knowledge work, `main` fu
 The baseline vault functions 100% using official **Obsidian Core** features, native YAML properties, and Markdown syntax. No community plugins (such as Dataview or Templater) are required for baseline functionality or note creation.
 
 ### Invariant 4: Structured Numeric PKM Taxonomy
-Notes are organized across a predictable 9-folder lifecycle hierarchy (`00-inbox` through `90-archives`). Files must not be dumped into the root directory. Notes progress naturally from capture to active projects, evergreen knowledge, and eventual archive.
+Notes are organized across a predictable 9-folder lifecycle hierarchy (`00-inbox` through `90-archives`). User knowledge notes should not be stored at the vault root. Reserved framework governance documents (e.g. `README.md`, `AGENTS.md`, `LICENSE`, `VAULT-STRUCTURE.md`) are explicit exceptions. Notes progress naturally from capture to active projects, evergreen knowledge, and eventual archive.
 
 ### Invariant 5: Type-Specific Prefix Registry
-Every note type utilizes a designated uppercase prefix paired with a timestamp (`DAILY-`, `CAP-`, `PRJ-`, `AREA-`, `MTG-`, `EXP-`, `LRN-`, `LIT-`, `KB-`, `ADR-`, `PB-`). This guarantees collision resistance across multiple notes created on the same day and establishes instant structural recognition.
+User-content note types use the timestamped prefix registry (`DAILY-`, `CAP-`, `PRJ-`, `AREA-`, `MTG-`, `EXP-`, `LRN-`, `LIT-`, `KB-`, `ADR-`, `PB-`) to guarantee collision resistance across multiple notes created on the same day. Framework governance documents use the reserved `META-` namespace.
 
 ### Invariant 6: Recoverable & Targeted Agent Mutations
 AI assistants (Hermes, Antigravity, Claude, Codex) operate under strict safety guardrails:

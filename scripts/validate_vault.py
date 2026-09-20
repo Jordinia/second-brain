@@ -53,6 +53,53 @@ VALID_NOTE_TYPES = {
     "profile",
 }
 
+TYPE_PREFIX_MAP = {
+    "daily": "DAILY-",
+    "capture": "CAP-",
+    "project": "PRJ-",
+    "area": "AREA-",
+    "meeting": "MTG-",
+    "experiment": "EXP-",
+    "learning-note": "LRN-",
+    "literature": "LIT-",
+    "concept": "KB-",
+    "decision": "ADR-",
+    "playbook": "PB-",
+    "specification": "META-",
+    "profile": "META-",
+}
+
+TYPE_REQUIRED_FIELDS = {
+    "daily": ["date", "status"],
+    "capture": ["status", "created_at"],
+    "project": ["title", "status"],
+    "area": ["title", "status"],
+    "concept": ["title", "status"],
+    "decision": ["title", "status", "date"],
+    "experiment": ["title", "status", "date"],
+    "learning-note": ["title", "date"],
+    "literature": ["title", "year", "reading_status"],
+    "meeting": ["title", "date"],
+    "playbook": ["title", "status", "date"],
+    "specification": ["title", "status"],
+    "profile": ["title"],
+}
+
+ALLOWED_STATUS = {
+    "project": {"planned", "active", "paused", "completed", "cancelled"},
+    "area": {"active", "maintenance", "inactive"},
+    "concept": {"draft", "provisional", "evergreen", "superseded"},
+    "decision": {"proposed", "accepted", "deprecated", "superseded"},
+    "playbook": {"draft", "active", "deprecated"},
+    "experiment": {"planned", "running", "completed", "failed"},
+    "capture": {"inbox", "processed", "discarded"},
+    "daily": {"active", "archived"},
+    "specification": {"draft", "active", "evergreen", "deprecated"},
+}
+
+ALLOWED_READING_STATUS = {"unread", "in-progress", "read", "reference"}
+ALLOWED_CONFIDENCE = {"raw", "provisional", "tested", "verified"}
+
 def extract_frontmatter(content: str):
     """Extract raw YAML frontmatter from markdown content if present."""
     if content.startswith("---"):
@@ -88,8 +135,9 @@ def validate_templates(vault_dir: Path):
 def validate_frontmatter(vault_dir: Path):
     """Validate YAML frontmatter across all markdown files (excluding templates)."""
     errors = []
+    seen_ids = {}
     
-    for file_path in vault_dir.rglob("*.md"):
+    for file_path in sorted(vault_dir.rglob("*.md")):
         rel_path = file_path.relative_to(vault_dir)
         
         # Skip templates folder and dot-directories
@@ -116,13 +164,67 @@ def validate_frontmatter(vault_dir: Path):
             errors.append(f"[Malformed Frontmatter] {rel_path}: Frontmatter is not a key-value mapping.")
             continue
 
-        # Required fields check for content notes
-        if "id" not in data:
+        # 1. Base required fields check for all notes (id, type, tags)
+        if "id" not in data or not data["id"]:
             errors.append(f"[Missing ID] {rel_path}: Missing required 'id' frontmatter field.")
-        if "type" not in data:
+            continue
+        
+        note_id = str(data["id"]).strip()
+
+        # Check ID uniqueness across entire vault
+        if note_id in seen_ids:
+            errors.append(f"[Duplicate ID] {rel_path}: ID '{note_id}' is already used by '{seen_ids[note_id]}'.")
+        else:
+            seen_ids[note_id] = rel_path
+
+        if "type" not in data or not data["type"]:
             errors.append(f"[Missing Type] {rel_path}: Missing required 'type' frontmatter field.")
-        elif data["type"] not in VALID_NOTE_TYPES:
-            errors.append(f"[Invalid Type] {rel_path}: Unknown note type '{data['type']}'.")
+            continue
+
+        note_type = str(data["type"]).strip()
+        if note_type not in VALID_NOTE_TYPES:
+            errors.append(f"[Invalid Type] {rel_path}: Unknown note type '{note_type}'.")
+            continue
+
+        if "tags" not in data or data["tags"] is None:
+            errors.append(f"[Missing Tags] {rel_path}: Missing required 'tags' frontmatter field.")
+        elif not isinstance(data["tags"], list):
+            errors.append(f"[Malformed Tags] {rel_path}: 'tags' must be a YAML list.")
+
+        # 2. Check Type-Specific ID Prefix
+        expected_prefix = TYPE_PREFIX_MAP.get(note_type)
+        if expected_prefix and not note_id.startswith(expected_prefix):
+            errors.append(
+                f"[Prefix Mismatch] {rel_path}: Note type '{note_type}' requires ID prefix '{expected_prefix}', got '{note_id}'."
+            )
+
+        # 3. Check Type-Specific Required Fields
+        req_fields = TYPE_REQUIRED_FIELDS.get(note_type, [])
+        for field in req_fields:
+            if field not in data or data[field] is None or data[field] == "":
+                errors.append(f"[Missing Field] {rel_path}: Note type '{note_type}' requires '{field}' frontmatter field.")
+
+        # 4. Check Allowed Enums
+        if note_type in ALLOWED_STATUS and "status" in data and data["status"]:
+            if str(data["status"]).strip() not in ALLOWED_STATUS[note_type]:
+                errors.append(
+                    f"[Invalid Status] {rel_path}: Status '{data['status']}' is invalid for type '{note_type}'. "
+                    f"Allowed: {sorted(ALLOWED_STATUS[note_type])}"
+                )
+
+        if "reading_status" in data and data["reading_status"]:
+            if str(data["reading_status"]).strip() not in ALLOWED_READING_STATUS:
+                errors.append(
+                    f"[Invalid Reading Status] {rel_path}: Reading status '{data['reading_status']}' is invalid. "
+                    f"Allowed: {sorted(ALLOWED_READING_STATUS)}"
+                )
+
+        if "confidence" in data and data["confidence"]:
+            if str(data["confidence"]).strip() not in ALLOWED_CONFIDENCE:
+                errors.append(
+                    f"[Invalid Confidence] {rel_path}: Confidence '{data['confidence']}' is invalid. "
+                    f"Allowed: {sorted(ALLOWED_CONFIDENCE)}"
+                )
 
     return errors
 
